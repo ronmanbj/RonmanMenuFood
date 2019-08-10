@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ronman_menu_food/screens/register.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -33,18 +34,25 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget singUpButton() {
+  Widget signUpButton() {
     return Expanded(
       child: OutlineButton(
         borderSide: BorderSide(color: Colors.orange[600]),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         child: Text(
-          'Sing Up',
+          'Sign Up',
           style: TextStyle(
             color: Colors.orange[600],
           ),
         ),
-        onPressed: () {},
+        onPressed: () {
+          print('You Click SignUp');
+
+          // Inheriate Object
+          MaterialPageRoute materialPageRoute = MaterialPageRoute(builder: (BuildContext context) => Register());
+          Navigator.of(context).push(materialPageRoute);
+
+        },
       ),
     );
   }
@@ -78,7 +86,7 @@ class _HomeState extends State<Home> {
         children: <Widget>[
           singInButton(),
           mySizeBox(),
-          singUpButton(),
+          signUpButton(),
         ],
       ),
     );
