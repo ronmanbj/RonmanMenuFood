@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'dart:convert';
 
 class Register extends StatefulWidget {
   @override
@@ -8,6 +10,8 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   // Explicit
   Color colorText = Colors.orange[600];
+  final formKey = GlobalKey<FormState>();
+  String name, user, password;
 
   // Method
   Widget nameText() {
@@ -24,6 +28,13 @@ class _RegisterState extends State<Register> {
           color: Colors.green,
         ),
       ),
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'Please Fill Name is Blank';
+        }
+      },onSaved: (String value){
+        name = value;
+      },
     );
   }
 
@@ -41,6 +52,13 @@ class _RegisterState extends State<Register> {
           color: Colors.blue,
         ),
       ),
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'กรุณากรอก User ด้วยนะ ค่ะ';
+        }
+      },onSaved: (String value){
+        user = value;
+      },
     );
   }
 
@@ -58,14 +76,42 @@ class _RegisterState extends State<Register> {
           color: Colors.red,
         ),
       ),
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'กรุณาระบุรหัสผ่าน ด้วยนะค่ะ';
+        }
+      },onSaved: (String value){
+        password = value;
+      },
     );
   }
 
   Widget registerButton() {
     return IconButton(
       icon: Icon(Icons.cloud_upload),
-      onPressed: () {},
+      onPressed: () {
+        if (formKey.currentState.validate()) {
+          formKey.currentState.save();
+          print('name = $name, user = $user, password = $password');
+          registerToMySQL();
+        }
+      },
     );
+  }
+
+  Future<void> registerToMySQL()async{
+
+    String urlString = 'https://www.androidthai.in.th/man/addDataMan.php?isAdd=true&Name=$name&User=$user&Password=$password';
+
+    var response = await get(urlString);
+    var result = json.decode(response.body);
+    print('result = $result');
+
+    if (result.toString() == 'true') {
+      Navigator.of(context).pop();
+    }
+
+
   }
 
   @override
@@ -76,15 +122,18 @@ class _RegisterState extends State<Register> {
           registerButton(),
         ],
         backgroundColor: colorText,
-        title: Text('สมัครสมาชิก'),
+        title: Text('สมัครสมาชิก', style: TextStyle(fontFamily: 'Pattaya'),),
       ),
-      body: ListView(
-        padding: EdgeInsets.all(30.0),
-        children: <Widget>[
-          nameText(),
-          userText(),
-          passwordText(),
-        ],
+      body: Form(
+        key: formKey,
+        child: ListView(
+          padding: EdgeInsets.all(30.0),
+          children: <Widget>[
+            nameText(),
+            userText(),
+            passwordText(),
+          ],
+        ),
       ),
     );
   }
