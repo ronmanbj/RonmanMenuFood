@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ronman_menu_food/screens/authen.dart';
 import 'package:ronman_menu_food/screens/register.dart';
 
 class Home extends StatefulWidget {
@@ -29,7 +30,12 @@ class _HomeState extends State<Home> {
           'Sign In',
           style: TextStyle(color: Colors.white),
         ),
-        onPressed: () {},
+        onPressed: () {
+
+          MaterialPageRoute materialPageRoute = MaterialPageRoute(builder: (BuildContext context) => Authen());
+          Navigator.of(context).push(materialPageRoute);
+
+        },
       ),
     );
   }
